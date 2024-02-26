@@ -9,6 +9,14 @@ export const App = () => {
     responsive: true,
     fluid: true,
     experimentalSvgIcons: true,
+    playbackRates: [0.5, 1, 1.5, 2],
+    controlBar: {
+      skipButtons: {
+        forward: 10,
+        backward: 10,
+      },
+    },
+
     sources: [
       {
         src: "//vjs.zencdn.net/v/oceans.mp4",

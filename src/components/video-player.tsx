@@ -1,11 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
+import SpeedControl from "./speed-control";
 
 export const VideoPlayer = (props) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
+  const [playbackRate, setPlaybackRate] = useState(1);
   const { options, onReady } = props;
+  const [notes, setNotes] = useState([]);
 
   useEffect(() => {
     if (!playerRef.current) {
@@ -26,6 +29,12 @@ export const VideoPlayer = (props) => {
     }
   }, [options, videoRef]);
 
+  useEffect(() => {
+    if (playerRef.current) {
+      playerRef.current.playbackRate(playbackRate);
+    }
+  }, [playbackRate]);
+
   // Dispose the Video.js player when the functional component unmounts
   useEffect(() => {
     const player = playerRef.current;
@@ -38,10 +47,46 @@ export const VideoPlayer = (props) => {
     };
   }, [playerRef]);
 
+  const addNote = (noteText: string) => {
+    const currentTime = playerRef.current.currentTime();
+    setNotes([...notes, { time: currentTime, text: noteText }]);
+    // Optionally, implement functionality to display the note marker on the timeline
+  };
+
+  console.log("notes", notes);
+
   return (
-    <div data-vjs-player>
-      <div ref={videoRef} />
-    </div>
+    <>
+      <div data-vjs-player>
+        <div ref={videoRef} />
+      </div>
+      <div
+        style={{
+          marginTop: "20px",
+        }}
+      >
+        <SpeedControl onChange={(value: number) => setPlaybackRate(value)} />
+        <input
+          type="text"
+          placeholder="Add a note..."
+          onKeyDown={(e: any) => {
+            if (e.key === "Enter" && e.target.value) {
+              addNote(e.target.value);
+              e.target.value = ""; // Clear input after adding
+            }
+          }}
+        />
+        {notes.length > 0 &&
+          notes.map((note) => {
+            return (
+              <div>
+                <span>At {note.time} :-</span>
+                <span>{note.text}</span>
+              </div>
+            );
+          })}
+      </div>
+    </>
   );
 };
 
