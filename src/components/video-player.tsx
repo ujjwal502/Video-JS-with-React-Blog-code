@@ -65,7 +65,7 @@ export const VideoPlayer = (props) => {
           marginTop: "20px",
         }}
       >
-        <SpeedControl onChange={(value: number) => setPlaybackRate(value)} />
+        {/* <SpeedControl onChange={(value: number) => setPlaybackRate(value)} /> */}
         <input
           type="text"
           placeholder="Add a note..."
@@ -77,9 +77,9 @@ export const VideoPlayer = (props) => {
           }}
         />
         {notes.length > 0 &&
-          notes.map((note) => {
+          notes.map((note, idx) => {
             return (
-              <div>
+              <div key={idx}>
                 <span>At {note.time} :-</span>
                 <span>{note.text}</span>
               </div>
