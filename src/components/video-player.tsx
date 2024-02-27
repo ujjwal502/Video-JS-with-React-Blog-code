@@ -8,7 +8,7 @@ export const VideoPlayer = (props) => {
   const playerRef = useRef(null);
   const [playbackRate, setPlaybackRate] = useState(1);
   const { options, onReady } = props;
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<{ time: number; text: string }[]>([]);
 
   useEffect(() => {
     if (!playerRef.current) {
@@ -50,7 +50,6 @@ export const VideoPlayer = (props) => {
   const addNote = (noteText: string) => {
     const currentTime = playerRef.current.currentTime();
     setNotes([...notes, { time: currentTime, text: noteText }]);
-    // Optionally, implement functionality to display the note marker on the timeline
   };
 
   console.log("notes", notes);
@@ -65,7 +64,6 @@ export const VideoPlayer = (props) => {
           marginTop: "20px",
         }}
       >
-        {/* <SpeedControl onChange={(value: number) => setPlaybackRate(value)} /> */}
         <input
           type="text"
           placeholder="Add a note..."
@@ -79,8 +77,8 @@ export const VideoPlayer = (props) => {
         {notes.length > 0 &&
           notes.map((note, idx) => {
             return (
-              <div key={idx}>
-                <span>At {note.time} :-</span>
+              <div style={{ marginTop: "20px" }} key={idx}>
+                <span>At {note.time} :- </span>
                 <span>{note.text}</span>
               </div>
             );
